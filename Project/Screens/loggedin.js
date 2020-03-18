@@ -38,21 +38,7 @@ export default class App extends React.Component{
     
 }
 
- /* componentDidMount(){
-  this._loadState().done();
-}
-
-_loadState = async () =>{
-
- var value = await AsyncStorage.getItem('token');
- if(value !== null){
-
-   this.setState({token:value});
-   
- }
-}
-
-*/
+ 
 
 
 /*
@@ -166,7 +152,7 @@ _handlepress_Logout = async () =>{
 
       var ok = response.ok;
       if(ok){
-           alert('200');
+           alert('You have successfully logged out :)');
            this.deletetoken(data.token);
           this.props.navigation.navigate('Home');
       return response.text();
@@ -199,7 +185,7 @@ _handlepress_Logout = async () =>{
  
 })
 .catch((error) => {
-alert('Invalid email/Password');
+alert('Something went wrong');
 });
 
 }

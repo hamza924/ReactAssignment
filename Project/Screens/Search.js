@@ -40,6 +40,7 @@ export default class App extends React.Component{
             fol:'',
             following:'',
             chits:[],
+            name:'',
 
     
     
@@ -104,7 +105,7 @@ export default class App extends React.Component{
           var ok = response.ok;
 
           if(ok){
-            alert('YAY OK');
+            alert('Success');
             return response.text();
           }
 
@@ -163,7 +164,7 @@ export default class App extends React.Component{
           var ok = response.ok;
 
           if(ok){
-            alert('YAY OK');
+            alert('Success');
             return response.text();
           }
 
@@ -222,7 +223,7 @@ export default class App extends React.Component{
           var ok = response.ok;
 
           if(ok){
-            //alert('YAY OK');
+            alert('Success');
             return response.json();
           }
 
@@ -238,7 +239,7 @@ export default class App extends React.Component{
 
           //alert(responseJson);
             
-          alert('THIS IS SECOND ONE');
+         
             //alert(responseJson);
 
          /*   this.setState({
@@ -294,7 +295,7 @@ export default class App extends React.Component{
           var ok = response.ok;
 
           if(ok){
-            alert('YAY OK');
+            alert('Success');
             return response.json();
           }
 
@@ -344,7 +345,7 @@ export default class App extends React.Component{
 
     }
 
-    _handlepress5 = async(val) =>{
+    _handlepress5 = async(val,uname) =>{
 
       fetch('http://10.0.2.2:3333/api/v0.0.5/user/'+val)
         .then((response) => response.json())
@@ -353,6 +354,7 @@ export default class App extends React.Component{
             this.setState({
                 isloading:true,
                 chits:responseJson.recent_chits,
+                name:uname
             })
         })
 
@@ -423,6 +425,7 @@ export default class App extends React.Component{
 
       let chits = this.state.chits.map((val,key) =>{
         return <View key ={key} style = {styles.item}>
+          <Text style = {styles.text}>{this.state.name} chitted</Text>
           <Text style = {styles.text}>{val.chit_content}</Text>
         </View>
   
@@ -449,7 +452,7 @@ export default class App extends React.Component{
     <TouchableOpacity
           style={styles.customBtnBG}
           onPress = {this._handlepress.bind(this)}  >
-          <Text style={styles.customBtnText}>Sign Up</Text>
+          <Text style={styles.customBtnText}>Search for user</Text>
         </TouchableOpacity> 
         <ScrollView>
         
@@ -504,7 +507,7 @@ export default class App extends React.Component{
 
         <TouchableOpacity
           style={styles.customBtnBG}
-          onPress = {this._handlepress5.bind(this,val.user_id)}  >
+          onPress = {this._handlepress5.bind(this,val.user_id,val.given_name)}  >
           <Text style={styles.customBtnText}>View Chitts</Text>
         </TouchableOpacity>
 
@@ -519,66 +522,12 @@ export default class App extends React.Component{
   
       });
 
-      const followers = this.state.user_follower_result.map((val,key) =>{
-        
-       
-        
-        return(
-        
-        
-        <View key = {key} style = {styles.item}>
-          
-        <Text style = {styles.text}>{this.state.fol} is followed by </Text>
-          
-          <Text style = {styles.text}>Username:{val.given_name}</Text>
-          <Text style = {styles.text}>User Id:{val.user_id}</Text>
+     
+      
 
-          
+      
 
-        </View>
-        
-        
-        )
-          
-
-      });
-
-      const following = this.state.user_following_result.map((val,key) =>{
-        
-       
-        
-        return(
-        
-        
-        <View key = {key} style = {styles.item}>
-          
-        <Text style = {styles.text}>{this.state.following} is following </Text>
-          
-          <Text style = {styles.text}>Username: {val.given_name}</Text>
-          <Text style = {styles.text}>User Id: {val.user_id}</Text>
-
-          
-
-        </View>
-        
-        
-        )
-          
-
-      });
-
-     /* var followers = this.state.user_follower_result.map((val,key) =>{
-
-        return<View key = {key} style = {styles.item}>
-          
-          <Text style = {styles.text}>User Id:{val.user_id}</Text>
-
-        </View>
-
-          
-
-      });
-*/
+     
     
     return(
       <ScrollView>
@@ -630,34 +579,49 @@ const styles = StyleSheet.create({
       alignItems: "center"
     },
   
-    /* Here, style the text of your button */
+   
       customBtnText: {
           fontSize: 24,
           fontWeight: '400',
           color: "#fff",
+          textAlign:"center",
       },
   
-    /* Here, style the background of your button */
+    
       customBtnBG: {
       backgroundColor: "#007aff",
       marginTop:30,
       paddingHorizontal: 20,
       paddingVertical: 10,
-      borderRadius: 50
+      borderRadius: 50,
+      borderRadius: 50,
+      alignSelf: 'stretch',
+      // paddingLeft:20,
+      // paddingRight:20,
+       marginLeft:50,
+       marginRight:50,
+       marginBottom:30,
       },
 
       text:{
           fontSize:30,
           fontWeight:'bold',
+          marginTop:20,
       },
       input: {
         height: 50,
         marginTop: 10,
         padding: 4,
         fontSize: 18,
-        borderWidth: 1,
+        borderWidth: 3,
         alignSelf: 'stretch',
-        borderColor: '#48bbec'
+        borderColor: '#007aff',
+        marginLeft:20,
+        marginRight:20,
+        marginTop:20,
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        borderRadius: 50
       },
       item:{
 
@@ -669,6 +633,7 @@ const styles = StyleSheet.create({
         borderBottomWidth:3,
         borderBottomColor:'#007aff',
         fontSize:20,
+        marginBottom:10,
       },
       
   });

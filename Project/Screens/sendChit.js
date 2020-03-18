@@ -41,7 +41,7 @@ export default class App extends React.Component{
 
 handlepress = async () =>{
 
-    //var val = await AsyncStorage.getItem('token');
+    
   
     let val = await AsyncStorage.getItem('token');
     let data = JSON.parse(val);
@@ -109,7 +109,7 @@ handlepress = async () =>{
 
       <View style = {styles.container}>
         
-        <Text style = {styles.text}>Upload your own chitt below!!!!!</Text>
+        <Text style = {styles.text}>Upload your own chitt below</Text>
 
         <TextInput
 

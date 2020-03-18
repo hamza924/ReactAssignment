@@ -92,8 +92,8 @@ export default class App extends React.Component{
 
 
 
-  // if(res.status === 200){
-    alert(res);
+  alert('You have successfully logged in :)')
+ 
   const d1 = JSON.stringify(res);
 
    const data  = JSON.parse(res);
@@ -219,8 +219,8 @@ const styles = StyleSheet.create({
         marginRight:20,
         marginTop:20,
         paddingHorizontal: 20,
-      paddingVertical: 10,
-      borderRadius: 50
+        paddingVertical: 10,
+        borderRadius: 50
       },
       
   });
