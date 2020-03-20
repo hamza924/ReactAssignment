@@ -22,6 +22,10 @@ import {
 export default class App extends React.Component{
     constructor(props){
         super(props);
+
+        /*
+        All the state variable initialsed for using later
+         */
     
         this.state=
         {
@@ -49,27 +53,23 @@ export default class App extends React.Component{
         
     }
 
-    _handlepress = async () =>{
+    /*
+    Method used to search for a user from the 
+    text input that the user inputs
+     */
+
+    _handlePressSearch = async () =>{
 
         let name = this.state.search_name;
 
-        
+        /*
+        Running fetch api call to search for user
+        getting respose as json and stroring the response 
+        inside the result state variable
+         */
         fetch('http://10.0.2.2:3333/api/v0.0.5/search_user?q='+name)
         .then((response) => response.json())
         .then((responseJson) =>{
-
-            
-         
-            //alert(responseJson);
-
-         /*   this.setState({
-                user_id:responseJson.user_id,
-                result_name:responseJson.given_name,
-                result_email:responseJson.email,
-                result_family_name:responseJson.family_name,
-            })
-            */
-            //alert(val.user_id);
 
             this.setState({
                 isloading:false,
@@ -83,12 +83,20 @@ export default class App extends React.Component{
         });
     }
 
-    _handlepress1 = async (value)=>{
+    /*
+    Method used to allow the user to follow a user once they have 
+    searched by inputting search name into text input
+    */
 
-      //alert(val);
-
-      let v = await AsyncStorage.getItem('token');
-      let data = JSON.parse(v);
+    _handlePressFollow = async (value)=>{
+      /*
+        Getting the token text string from async and storing
+        it in a let variable 
+        also parsing the text string as json to use the token value
+        in the header
+       */
+      let tokenValue = await AsyncStorage.getItem('token');
+      let data = JSON.parse(tokenValue);
 
       fetch('http://10.0.2.2:3333/api/v0.0.5/user/'+value+'/follow',{
 
@@ -101,6 +109,11 @@ export default class App extends React.Component{
 
       })
         .then((response) => {
+
+          /*
+          Checking to see if the response was ok 
+          if ok alert user and if not show other message
+           */
 
           var ok = response.ok;
 
@@ -116,20 +129,6 @@ export default class App extends React.Component{
 
         })
         .then((responseJson) =>{
-
-            
-         
-            //alert(responseJson);
-
-         /*   this.setState({
-                user_id:responseJson.user_id,
-                result_name:responseJson.given_name,
-                result_email:responseJson.email,
-                result_family_name:responseJson.family_name,
-            })
-            */
-            //alert(val.user_id);
-
             
         })
 
@@ -142,12 +141,22 @@ export default class App extends React.Component{
 
     }
 
-    _handlepress2 = async (value)=>{
+    /*
+    Method used to allow users to unfollow a user
+    once they have searched for a user
+     */
 
-      //alert(val);
+    _handlePressUnfollow = async (value)=>{
 
-      let v = await AsyncStorage.getItem('token');
-      let data = JSON.parse(v);
+      
+      /*
+        Getting the token text string from async and storing
+        it in a let variable 
+        also parsing the text string as json to use the token value
+        in the header
+       */
+      let tokenValue = await AsyncStorage.getItem('token');
+      let data = JSON.parse(tokenValue);
 
       fetch('http://10.0.2.2:3333/api/v0.0.5/user/'+value+'/follow',{
 
@@ -169,26 +178,12 @@ export default class App extends React.Component{
           }
 
           else{
-            alert('Seems like you are already following them');
+            alert('Something went wrong');
           }
 
 
         })
         .then((responseJson) =>{
-
-            
-         
-            //alert(responseJson);
-
-         /*   this.setState({
-                user_id:responseJson.user_id,
-                result_name:responseJson.given_name,
-                result_email:responseJson.email,
-                result_family_name:responseJson.family_name,
-            })
-            */
-            //alert(val.user_id);
-
             
         })
 
@@ -201,12 +196,22 @@ export default class App extends React.Component{
 
     }
 
-    _handlepress3 = async (value,val2)=>{
+    /*
+    Method used to allow users to see who is following 
+    the searched user
+     */
 
-      //alert(val);
+    _handlePressFollowers = async (value,name)=>{
+      /*
+        Getting the token text string from async and storing
+        it in a let variable 
+        also parsing the text string as json to use the token value
+        in the header
+       */
+      
 
-      let v = await AsyncStorage.getItem('token');
-      let data = JSON.parse(v);
+      let tokenValue = await AsyncStorage.getItem('token');
+      let data = JSON.parse(tokenValue);
 
       fetch('http://10.0.2.2:3333/api/v0.0.5/user/'+value+'/followers',{
 
@@ -220,6 +225,11 @@ export default class App extends React.Component{
       })
         .then((response) => {
 
+          /*
+          Checking to see if the response is ok
+          if ok alert user and return response as json
+           */
+
           var ok = response.ok;
 
           if(ok){
@@ -228,35 +238,25 @@ export default class App extends React.Component{
           }
 
           else{
-            alert('Seems like you are already following them');
+            alert('Something went wrong');
           }
 
 
         })
         .then((responseJson) =>{
 
-         // const data = JSON.parse(responseJson);
+          /*
+          Use the response to set the state of is loading
+          so we are able to render the result which is in json
 
-          //alert(responseJson);
-            
-         
-            //alert(responseJson);
-
-         /*   this.setState({
-                user_id:responseJson.user_id,
-                result_name:responseJson.given_name,
-                result_email:responseJson.email,
-                result_family_name:responseJson.family_name,
-            })
-            */
-            //alert(val.user_id);
+           */
 
             this.setState({
 
 
               isloading:true,
               user_follower_result:responseJson,
-              fol:val2
+              fol:name
              
 
             })
@@ -273,12 +273,21 @@ export default class App extends React.Component{
 
     }
 
-    _handlepress4 = async (value,val2)=>{
+    /*
+    Method used to see who the searched user is following
+     */
 
-      //alert(val);
+    _handlePressFollowing = async (value,name)=>{
 
-      let v = await AsyncStorage.getItem('token');
-      let data = JSON.parse(v);
+      /*
+        Getting the token text string from async and storing
+        it in a let variable 
+        also parsing the text string as json to use the token value
+        in the header
+       */
+
+      let tokenValue = await AsyncStorage.getItem('token');
+      let data = JSON.parse(tokenValue);
 
       fetch('http://10.0.2.2:3333/api/v0.0.5/user/'+value+'/following',{
 
@@ -291,6 +300,10 @@ export default class App extends React.Component{
 
       })
         .then((response) => {
+           /*
+          Checking to see if the response is ok
+          if ok alert user and return response as json
+           */
 
           var ok = response.ok;
 
@@ -300,33 +313,25 @@ export default class App extends React.Component{
           }
 
           else{
-            alert('Seems like you are already following them');
+            alert('Something went wrong');
           }
 
 
         })
         .then((responseJson) =>{
 
-         
-            
-         
-            //alert(responseJson);
+          /*
+          Use the response to set the state of is loading
+          so we are able to render the result which is in json
 
-         /*   this.setState({
-                user_id:responseJson.user_id,
-                result_name:responseJson.given_name,
-                result_email:responseJson.email,
-                result_family_name:responseJson.family_name,
-            })
-            */
-            //alert(val.user_id);
+           */
 
             this.setState({
 
 
               isloading:true,
-             user_following_result:responseJson,
-              following:val2
+              user_following_result:responseJson,
+              following:name
              
 
             })
@@ -345,7 +350,11 @@ export default class App extends React.Component{
 
     }
 
-    _handlepress5 = async(val,uname) =>{
+    /*
+    Method used to show all the chits about the searched user
+     */
+
+    _handlePressChitt = async(val,uname) =>{
 
       fetch('http://10.0.2.2:3333/api/v0.0.5/user/'+val)
         .then((response) => response.json())
@@ -375,21 +384,44 @@ export default class App extends React.Component{
 
     if(this.state.isloading){
 
-       var followers = this.state.user_follower_result.map((val,key) =>{
-        
-       
+      /*
+      Each variable used to map each user and display them 
+      into the state mapping becasue response is in 
+      json objects
+       */
+       let followers = this.state.user_follower_result.map((val,key) =>{
         
         return(
-        
-        
+      
         <View key = {key} style = {styles.item}>
           
-        <Text style = {styles.text}>{this.state.fol} is followed by </Text>
+          <Text style = {styles.text}>{this.state.fol} is followed by </Text>
           
           <Text style = {styles.text}>Username:{val.given_name}</Text>
           <Text style = {styles.text}>User Id:{val.user_id}</Text>
-
+        </View>
+        
+        
+        )
           
+
+      });
+
+      /*
+      Let variable called following will show to the user
+      who the person is following when they click on the view 
+      following button
+      it will only be displayed when the state is set to loading
+       */
+      let following = this.state.user_following_result.map((val,key) =>{
+        
+        return(
+        <View key = {key} style = {styles.item}>
+          
+          <Text style = {styles.text}>{this.state.following} is following </Text>
+          
+          <Text style = {styles.text}>Username:{val.given_name}</Text>
+          <Text style = {styles.text}>User Id:{val.user_id}</Text>
 
         </View>
         
@@ -399,29 +431,6 @@ export default class App extends React.Component{
 
       });
 
-      var following = this.state.user_following_result.map((val,key) =>{
-        
-       
-        
-        return(
-        
-        
-        <View key = {key} style = {styles.item}>
-          
-        <Text style = {styles.text}>{this.state.following} is following </Text>
-          
-          <Text style = {styles.text}>Username:{val.given_name}</Text>
-          <Text style = {styles.text}>User Id:{val.user_id}</Text>
-
-          
-
-        </View>
-        
-        
-        )
-          
-
-      });
 
       let chits = this.state.chits.map((val,key) =>{
         return <View key ={key} style = {styles.item}>
@@ -431,38 +440,33 @@ export default class App extends React.Component{
   
       });
 
-
+        /*
+        Original state will be displayed once the user
+        goes to the search for user page
+         */
 
         return(
-            <View style = {styles.container}>
-        <Text style = {styles.text}>Search for a user </Text>
+        <View style = {styles.container}>
+            <Text style = {styles.text}>Search for a user </Text>
+            <TextInput
+            placeholder="e.g:John doe"
+            onChangeText = {(val) => this.setState({search_name:val})}
+            style={styles.input}/>
 
-        <TextInput
+            <TouchableOpacity
+            style={styles.customBtnBG}
+            onPress = {this._handlePressSearch.bind(this)}  >
+            <Text style={styles.customBtnText}>Search for user</Text>
+            </TouchableOpacity> 
 
-        placeholder="e.g:John doe"
-
-        onChangeText = {(val) => this.setState({search_name:val})}
-
-        style={styles.input}/>
-
-        
-
-   
-
-    <TouchableOpacity
-          style={styles.customBtnBG}
-          onPress = {this._handlepress.bind(this)}  >
-          <Text style={styles.customBtnText}>Search for user</Text>
-        </TouchableOpacity> 
-        <ScrollView>
-        
-       {followers}
-       {following}
-       {chits}
-      
-
-        </ScrollView>
-        </View>
+               
+               <ScrollView> 
+                 
+                  {followers}
+                  {following}
+                  {chits}
+                </ScrollView>
+            </View>
 
         )
 
@@ -473,46 +477,47 @@ export default class App extends React.Component{
 
     }else  {
 
-      
-    var chits = this.state.result.map((val,key) =>{
+    /*
+    Mapping each user who matches the search criteria
+    and adding all the following functinailty next to e
+    ach user
+     */
+    let chits = this.state.result.map((val,key) =>{
         
         return <View key ={key} style = {styles.item}>
           <Text style = {styles.text}>Given Name:{val.given_name}</Text>
           <Text style = {styles.text}>User Id:{val.user_id}</Text>
 
           <TouchableOpacity
-          style={styles.customBtnBG}
-          onPress = {this._handlepress1.bind(this,val.user_id)}  >
-          <Text style={styles.customBtnText}>Follow</Text>
-        </TouchableOpacity> 
+            style={styles.customBtnBG}
+            onPress = {this._handlePressFollow.bind(this,val.user_id)}  >
+            <Text style={styles.customBtnText}>Follow</Text>
+          </TouchableOpacity> 
 
-        <TouchableOpacity
-          style={styles.customBtnBG}
-          onPress = {this._handlepress2.bind(this,val.user_id)}  >
-          <Text style={styles.customBtnText}>UnFollow</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.customBtnBG}
+            onPress = {this._handlePressUnfollow.bind(this,val.user_id)}  >
+            <Text style={styles.customBtnText}>UnFollow</Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity
-          style={styles.customBtnBG}
-          onPress = {this._handlepress3.bind(this,val.user_id,val.given_name)}  >
-         
-          <Text style={styles.customBtnText}>View Followers</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.customBtnBG}
+            onPress = {this._handlePressFollowers.bind(this,val.user_id,val.given_name)}  >
+          
+            <Text style={styles.customBtnText}>View Followers</Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity
-          style={styles.customBtnBG}
-          onPress = {this._handlepress4.bind(this,val.user_id,val.given_name)}  >
-          <Text style={styles.customBtnText}>View Following</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.customBtnBG}
+            onPress = {this._handlePressFollowing.bind(this,val.user_id,val.given_name)}  >
+            <Text style={styles.customBtnText}>View Following</Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity
-          style={styles.customBtnBG}
-          onPress = {this._handlepress5.bind(this,val.user_id,val.given_name)}  >
-          <Text style={styles.customBtnText}>View Chitts</Text>
-        </TouchableOpacity>
-
-
-            
+          <TouchableOpacity
+            style={styles.customBtnBG}
+            onPress = {this._handlePressChitt.bind(this,val.user_id,val.given_name)}  >
+            <Text style={styles.customBtnText}>View Chitts</Text>
+          </TouchableOpacity>
           
         </View>
 
@@ -521,35 +526,14 @@ export default class App extends React.Component{
         
   
       });
-
-     
-      
-
-      
-
-     
-    
     return(
+      /**
+       Displaying each user inside a scrollview
+       */
       <ScrollView>
-      <View style = {styles.container}>
-        
-        
-        {chits}
-        
-
-     
-        
-
-
-  
-
-
-       
-
-       
-
-
-      </View>
+        <View style = {styles.container}>
+          {chits}
+        </View>
       </ScrollView>
     )
     
@@ -558,7 +542,7 @@ export default class App extends React.Component{
     
 
     
-    }
+   }
     
 
 

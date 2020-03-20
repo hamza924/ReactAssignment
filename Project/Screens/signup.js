@@ -15,6 +15,10 @@ import {
 
 export default class App extends React.Component{
 
+  /*
+  Contructor and state variables intialised 
+   */
+
     constructor(props){
         super(props);
   
@@ -34,10 +38,13 @@ export default class App extends React.Component{
         
    }
 
+   /*
+   Method used to signup new accounts
+   used to stringify state variables to be sent to the api
+   endpoint as json
+    */
+
    async onLogin(){
-              
-
-
 
     try {
       let response = await fetch('http://10.0.2.2:3333/api/v0.0.5/user', {
@@ -48,36 +55,31 @@ export default class App extends React.Component{
           },
           body: JSON.stringify({
                                 
-             given_name:this.state.given_name,
-              family_name:this.state.family_name,
-              email:this.state.email,
-             password:this.state.password
+            given_name:this.state.given_name,
+            family_name:this.state.family_name,
+            email:this.state.email,
+            password:this.state.password
 
 
                               
-                })
-                            });
-      let res = await response.text();
-      if (response.status >= 200 && response.status < 300) {
-          //Handle success
-         
-         
-          
+            })
+         });
 
-          alert('YOU HAVE SIGNED UP ' +" " + res);
-
-          this.props.navigation.navigate('login');
-          //On success we will store the access_token in the AsyncStorage
-          
-      } else {
-          //Handle error
-          alert('ON NO SOMETHING WENT WRONG' + res);
+            let res = await response.text();
+            if (response.status >= 200 && response.status < 300) 
+            {
+              /*
+              Checking to see if response is ok if ok the user
+              will be navigated to the login page
+               */
+            alert('You have successfully signed up');
+             this.props.navigation.navigate('login');
+          } 
+          else {
+        
+          alert('Something went wrong ' + res);
           let error = res;
           throw error;
-
-          
-
-
       }
     } catch(error) {
         
@@ -90,48 +92,29 @@ export default class App extends React.Component{
       <View style = {styles.container}>
         <Text style = {styles.text}>Sign up for An Account</Text>
 
-        
-
-        
-
         <TextInput
-
         placeholder="GIVEN NAME"
-
         onChangeText = {(val) => this.setState({given_name:val})}
-
         style={styles.input}/>
 
          
         <TextInput
-
-            placeholder="FAMILY NAME"
-
-            onChangeText = {(val) => this.setState({family_name:val})}
-
-            style={styles.input}/>
+        placeholder="FAMILY NAME"
+        onChangeText = {(val) => this.setState({family_name:val})}
+        style={styles.input}/>
 
             
 
-            <TextInput
+        <TextInput
+        placeholder="Email"
+        onChangeText = {(val) => this.setState({email:val})}
+        style={styles.input}/>
 
-
-            placeholder="Email"
-
-            onChangeText = {(val) => this.setState({email:val})}
-
-            style={styles.input}/>
-
-
-            <TextInput
-
-            placeholder="PASSWORD"
-
-            onChangeText = {(val) => this.setState({password:val})}
-
-            style={styles.input}
-
-            secureTextEntry={true}/>
+        <TextInput
+        placeholder="PASSWORD"
+        onChangeText = {(val) => this.setState({password:val})}
+        style={styles.input}
+        secureTextEntry={true}/>
 
 
         <TouchableOpacity

@@ -39,19 +39,23 @@ export default class App extends React.Component{
     
 }
 
-handlepress = async () =>{
+/*
+ Method used to send a chitt once the user is logged in
+ it uses the token that was stored in the async storgage 
+ */
+handlePressUpload = async () =>{
 
-    
-  
+
+    /*
+    Accessing the token to be used in the header
+    */
     let val = await AsyncStorage.getItem('token');
     let data = JSON.parse(val);
-   
-  
   
     fetch('http://10.0.2.2:3333/api/v0.0.5/chits', {
       method: 'POST',
       headers: {
-     'Accept': 'text/plain , application/json',
+      'Accept': 'text/plain , application/json',
       'Content-Type': 'application/json',
       'X-Authorization': data.token,
   
@@ -59,38 +63,39 @@ handlepress = async () =>{
      body: JSON.stringify({
        chit_id:0,
        timestamp:0,
-      chit_content: this.state.chit_content,
+       chit_content: this.state.chit_content,
     
-    }),
-  })
-  .then((response) => {
-  
-  
-  
-  
+       }),
+    })
+    .then((response) => {
+
         var ok = response.ok;
         if(ok){
-             alert('200');
+            /*
+             If the response is ok the user will be navigated
+             to the get user chitt page 
+             */
+            alert('Success');
             this.props.navigation.navigate('GetUserChit');
-        return response.text();
+            return response.text();
         }
         else{
   
-    alert('ERORR2');
-    }
+        alert('Something went wrong');
+        }
   
-  })
+    })
   
   
-  .then((res) => {
+      .then((res) => {
 
    
-  })
-  .catch((error) => {
-  alert('Invalid email/Password');
-  });
+      })
+      .catch((error) => {
+        alert('Something went wrong');
+      });
   
-  }
+    }
 
 
 
@@ -98,12 +103,6 @@ handlepress = async () =>{
 
 
   render(){
-
-    
-
-      
-
-
 
     return(
 
@@ -124,7 +123,7 @@ handlepress = async () =>{
       
         <TouchableOpacity
           style={styles.customBtnBG}
-          onPress = {this.handlepress.bind(this)}  >
+          onPress = {this.handlePressUpload.bind(this)}  >
           <Text style={styles.customBtnText}>Send</Text>
         </TouchableOpacity>
 
@@ -150,6 +149,7 @@ const styles = StyleSheet.create({
           fontSize: 24,
           fontWeight: '400',
           color: "#fff",
+          textAlign:"center",
       },
   
     
@@ -158,7 +158,12 @@ const styles = StyleSheet.create({
       marginTop:30,
       paddingHorizontal: 20,
       paddingVertical: 10,
-      borderRadius: 50
+      borderRadius: 50,
+      alignSelf: 'stretch',
+      // paddingLeft:20,
+      // paddingRight:20,
+       marginLeft:50,
+       marginRight:50,
       },
 
       text:{
@@ -194,6 +199,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         paddingVertical: 10,
         borderRadius: 50,
+        fontWeight:'bold',
         
       },
       

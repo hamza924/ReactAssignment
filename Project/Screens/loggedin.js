@@ -41,159 +41,69 @@ export default class App extends React.Component{
  
 
 
+
 /*
-Method used to post chitt using the token from when the 
-user has logged in
+ Method used to logout user of application on press of the 
+ button
  */
-handlepress = async () =>{
-
-  //var val = await AsyncStorage.getItem('token');
-
-  let val = await AsyncStorage.getItem('token');
-  let data = JSON.parse(val);
-  //alert(data.token +' ' + data.id);
-
-  //var t = await AsyncStorage.getItem('token');
-  //var data = JSON.parse(t);
-  //var d  = data.token;
-
-  //alert(d);
-
-
-  fetch('http://10.0.2.2:3333/api/v0.0.5/chits', {
-    method: 'POST',
-    headers: {
-   'Accept': 'text/plain , application/json',
-    'Content-Type': 'application/json',
-    'X-Authorization': data.token,
-
-   },
-   body: JSON.stringify({
-     chit_id:0,
-     timestamp:0,
-    chit_content: this.state.chit_content,
-  
-  }),
-})
-.then((response) => {
-
-
-
-
-      var ok = response.ok;
-      if(ok){
-           alert('200');
-          this.props.navigation.navigate('GetUserChit');
-      return response.text();
-      }
-      else{
-
-  alert('ERORR2');
-  }
-
-})
-
-
-.then((res) => {
-
-
-
-
-// if(res.status === 200){
-
- 
- // }
- // else{
- //   alert(res);
- // }
-
- //alert(res);
-
-
-
- 
-})
-.catch((error) => {
-alert('Invalid email/Password');
-});
-
-}
-
-
 
 _handlepress_Logout = async () =>{
 
-  //var val = await AsyncStorage.getItem('token');
-
-  let val = await AsyncStorage.getItem('token');
-  let data = JSON.parse(val);
-  //alert(data.token +' ' + data.id);
-
-  //var t = await AsyncStorage.getItem('token');
-  //var data = JSON.parse(t);
-  //var d  = data.token;
-
-  //alert(d);
-
-
-  fetch('http://10.0.2.2:3333/api/v0.0.5/logout', {
-    method: 'POST',
-    headers: {
+        /*
+        Getting the token text string from async and storing
+        it in a let variable 
+        also parsing the text string as json to use the token value
+        in the header
+        */
+  let tokenVal = await AsyncStorage.getItem('token');
+  let data = JSON.parse(tokenVal);
+  
+      fetch('http://10.0.2.2:3333/api/v0.0.5/logout', {
+         method: 'POST',
+         headers: {
+         'X-Authorization': data.token,
+        },
    
-    'X-Authorization': data.token,
+      })
+        .then((response) => {
 
-   },
-   
-})
-.then((response) => {
+          /*
+          Check to see if response is ok if it is user 
+          will be logged out and their token will be deleted from 
+          asyn storage they will also be navigated to the main page
+           */
+            var ok = response.ok;
+            if(ok){
+              alert('You have successfully logged out :)');
+              this.deletetoken(data.token);
+              this.props.navigation.navigate('Home');
+              return response.text();
+          }
+          else{
 
+          alert('Something went wrong ');
+        }
 
+      })
+        .then((res) => {
 
+      })
+    .catch((error) => {
+    alert('Something went wrong');
+    });
 
-      var ok = response.ok;
-      if(ok){
-           alert('You have successfully logged out :)');
-           this.deletetoken(data.token);
-          this.props.navigation.navigate('Home');
-      return response.text();
-      }
-      else{
-
-  alert('ERORR2');
   }
 
-})
-
-
-.then((res) => {
-
-
-
-
-// if(res.status === 200){
-
- 
- // }
- // else{
- //   alert(res);
- // }
-
- //alert(res);
-
-
-
- 
-})
-.catch((error) => {
-alert('Something went wrong');
-});
-
-}
+  /*
+  Method used to delete token from async stroage
+  method requires a parameter passed so the method will
+  work
+   */
 
  deletetoken = async(val) =>{
 
   try {
-    await AsyncStorage.removeItem(key);
+    await AsyncStorage.removeItem(val);
     return true;
   }
   catch(exception) {

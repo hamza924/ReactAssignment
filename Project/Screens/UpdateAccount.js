@@ -42,15 +42,32 @@ export default class App extends React.Component{
         
     }
 
+    /*
+     Method used to load data before page renders 
+     and display inside text input fields 
+     so user can easily edit changes
+     */
     async componentDidMount(){
 
-        let val = await AsyncStorage.getItem('token');
-         let data = JSON.parse(val);
+        /*
+        Getting the token text string from async and storing
+        it in a let variable 
+        also parsing the text string as json to use the token value
+        in the url to get data about the user
+       */
+
+        let tokenVal = await AsyncStorage.getItem('token');
+        let data = JSON.parse(tokenVal);
    
            
            return fetch('http://10.0.2.2:3333/api/v0.0.5/user/'+data.id)
            .then((response) => response.json())
            .then((responseJson) =>{
+
+              /*
+              Setting the state so we are able to render
+              the data from json
+               */
    
                this.setState({
                    isloading:false,
@@ -66,12 +83,25 @@ export default class App extends React.Component{
            });
        }
 
-       _handlepress_Update = async () =>{
 
-        let v = await AsyncStorage.getItem('token');
-      let data = JSON.parse(v);
+       /*
+       Handle update method will run when the user click
+       the update button
+       */
 
-      fetch('http://10.0.2.2:3333/api/v0.0.5/user/'+data.id,{
+     _handlepress_Update = async () =>{
+
+        /*
+        Getting the token text string from async and storing
+        it in a let variable 
+        also parsing the text string as json to use the token value
+        in the header
+       */
+
+        let tokenVal = await AsyncStorage.getItem('token');
+        let data = JSON.parse(tokenVal);
+
+        fetch('http://10.0.2.2:3333/api/v0.0.5/user/'+data.id,{
 
         method: 'PATCH',
 
@@ -102,27 +132,12 @@ export default class App extends React.Component{
           }
 
           else{
-            alert('Seems like you are already following them' +response);
+            alert('Somethin went wrong' +response);
           }
 
 
         })
         .then((responseJson) =>{
-
-            
-         
-            //alert(responseJson);
-
-         /*   this.setState({
-                user_id:responseJson.user_id,
-                result_name:responseJson.given_name,
-                result_email:responseJson.email,
-                result_family_name:responseJson.family_name,
-            })
-            */
-            //alert(val.user_id);
-
-            
         })
 
         .catch((error) =>{
@@ -135,14 +150,23 @@ export default class App extends React.Component{
 
 
   render(){
+    /*
+    Shows loading wheel to indicate something is happeining
 
+     */
     if(this.state.isloading){
         return(
             <View style = {styles.container}>
                 <ActivityIndicator/>
             </View>
         )
-    }else{
+
+    }
+    /*
+    Displays the text inputs
+    once the loading has happened
+     */
+    else{
 
     return(
         <View style = {styles.container}>
@@ -150,51 +174,35 @@ export default class App extends React.Component{
             <Text style = {styles.text}>Update Your Account Details</Text>
 
             <TextInput
-
             defaultValue={this.state.givenname}
-
             onChangeText = {(val) => this.setState({givenname:val})}
-
             style={styles.input}/>
 
             <TextInput
-
             defaultValue={this.state.familyname}
-
-            
-
             onChangeText = {(val) => this.setState({familyname:val})}
-
             style={styles.input}/>
 
             <TextInput
-
             defaultValue={this.state.email_}
-
             onChangeText = {(val) => this.setState({email_:val})}
-
             style={styles.input}/>
 
-          <Text style = {styles.textHeading}>Password will remain the same if not changed</Text>
-
+            <Text style = {styles.textHeading}>Password will remain the same if not changed</Text>
             <TextInput
-
             placeholder="Password"
-
             onChangeText = {(val) => this.setState({password:val})}
-
             style={styles.input}
-            
             secureTextEntry = {true}/>
 
           
 
 
-<TouchableOpacity
-          style={styles.customBtnBG}
-          onPress = {this._handlepress_Update.bind(this)}  >
-          <Text style={styles.customBtnText}>Update</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.customBtnBG}
+            onPress = {this._handlepress_Update.bind(this)}  >
+            <Text style={styles.customBtnText}>Update</Text>
+          </TouchableOpacity>
 
 
         </View>
@@ -215,7 +223,7 @@ const styles = StyleSheet.create({
       alignItems: "center"
     },
   
-    /* Here, style the text of your button */
+   
       customBtnText: {
           fontSize: 24,
           fontWeight: '400',
@@ -223,7 +231,7 @@ const styles = StyleSheet.create({
           textAlign:"center",
       },
   
-    /* Here, style the background of your button */
+
       customBtnBG: {
       backgroundColor: "#007aff",
       marginTop:30,

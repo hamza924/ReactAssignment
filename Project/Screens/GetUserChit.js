@@ -20,6 +20,10 @@ import {
 
 export default class App extends React.Component{
 
+  /*
+  Constructor and state variables
+   */
+
     constructor(props){
         super(props);
     
@@ -34,15 +38,30 @@ export default class App extends React.Component{
         
     }
 
+    /*
+    Component did mount loads up all the users chits when they
+    click on view my chits from the previous page this will run
+    first before render has occured
+     */
  async componentDidMount(){
+    
+      /*
+        Getting the token text string from async and storing
+        it in a let variable 
+        also parsing the text string as json to use the token value
+        in the header
+       */
+     let tokenVal = await AsyncStorage.getItem('token');
+     let data = JSON.parse(tokenVal);
 
-     let val = await AsyncStorage.getItem('token');
-      let data = JSON.parse(val);
-
-        
         return fetch('http://10.0.2.2:3333/api/v0.0.5/user/'+data.id)
         .then((response) => response.json())
         .then((responseJson) =>{
+
+          /*
+          Use the response to set the state of is loading
+          so we are able to render the result which is in json
+           */
 
             this.setState({
                 isloading:false,
@@ -58,74 +77,9 @@ export default class App extends React.Component{
 
     
 
-    _getid = async() =>{
-
-    let val = await AsyncStorage.getItem('token');
-       let data = JSON.parse(val);
-
-       alert(data.id);
-
-    }
-
-   _handlepress = async() =>{
-
-   let val = await AsyncStorage.getItem('token');
-       let data = JSON.parse(val);
-
-       let id = data.id;
-        
-      
-  fetch('http://10.0.2.2:3333/api/v0.0.5/user/'+id, {
-    method: 'GET',
-        })
-        .then((response) => {
-
-
-
-
-      var ok = response.ok;
-      if(ok){
-           alert('200');
-         
-      return response.json();
-      }
-      else{
-
-        alert('ERORR2');
-        }
-
-        })
-
-
-        .then((res) => {
-
-            this.setState({
-              isloading:false,
-              recent_chit:res.family_name,
-                
-            })
-           
-
-
-
-
-
- 
-    })
-    .catch((error) => {
-    alert('Invalid email/Password');
-    });
-
-    }
-
+   
 
   render(){
-
-
-    
-   
-  
-
 
     if(this.state.isloading){
       return(
@@ -146,10 +100,12 @@ export default class App extends React.Component{
     return(
 
       
-        <ScrollView showsVerticalScrollIndicator={false}>
-      <View style = {styles.container}>
-        {chits}
-      </View>
+      <ScrollView showsVerticalScrollIndicator={false}>
+
+        <View style = {styles.container}>
+          {chits}
+        </View>
+
       </ScrollView>
     
 
@@ -157,25 +113,7 @@ export default class App extends React.Component{
 
 
 
-/*
-      <View style = {styles.container}>
-      <Text style = {styles.text}>Viewing My Chitts</Text>
 
-        
-        <TouchableOpacity
-          style={styles.customBtnBG}
-          onPress = {this._handlepress}  >
-          <Text style={styles.customBtnText}>Retrieve</Text>
-        </TouchableOpacity>
-
-        
-
-
-         
-
-
-      </View>
-      */
     );
     
     }
@@ -193,14 +131,14 @@ const styles = StyleSheet.create({
       alignItems: "center"
     },
   
-    /* Here, style the text of your button */
+    
       customBtnText: {
           fontSize: 24,
           fontWeight: '400',
           color: "#fff",
       },
   
-    /* Here, style the background of your button */
+   
       customBtnBG: {
       backgroundColor: "#007aff",
       marginTop:30,

@@ -36,98 +36,71 @@ export default class App extends React.Component{
    }
 
 
- /* componentDidMount(){
-     this._loadState().done();
-   }
-
-   _loadState = async () =>{
-
-    var value = await AsyncStorage.getItem('token');
-    if(value !== null){
-
-      this.props.navigation.navigate('loggedin');
-      
-    }
-   }
-
-   */
+   /*
+    Method used to for the user to login it uses the ES6 arrow
+    function which allows access to the this in the body
+    part of the function
+    */
    
-   handlepress = async () =>{
+   
+   handlePressLogin = async () =>{
 
     fetch('http://10.0.2.2:3333/api/v0.0.5/login', {
-      method: 'POST',
-      headers: {
-     'Accept': 'text/plain , application/json',
-      'Content-Type': 'application/json'
-     },
-     body: JSON.stringify({
-    email: this.state.email,
-    password:this.state.password,
-    }),
-})
-.then((response) => {
+        method: 'POST',
+        headers: {
+        'Accept': 'text/plain , application/json',
+        'Content-Type': 'application/json'
+      },
+          body: JSON.stringify({
+            email: this.state.email,
+            password:this.state.password,
+            }),
+        })
+        .then((response) => {
 
-//  const contentType = response.headers.get('Content-Type');
-  //alert(response);
-  
+            var ok = response.ok;
+            if(ok){
+                /*
+                 Once the user logged in with correct details
+                 they will be navigated to the logged in page 
+                 the response is returned as text to set in 
+                 storage to be used to later
+                 */
+                alert('You have successfully logged in :)');
+                this.props.navigation.navigate('loggedin');
+                return response.text();
+            }
+            else{
+              
+              alert('Invalid Email/Password');
+              
+            } 
+          })
+            .then((res) => {
 
-  
- 
-        var ok = response.ok;
-        if(ok){
-            // alert('200');
-            this.props.navigation.navigate('loggedin');
-        return response.text();
-        }
-        else{
+           
+        
+            /*
+            Setting the response in async with id as token
+            */
+            AsyncStorage.setItem('token',res);
+          
+      
+          })
+      .catch((error) => {
+      alert('Invalid email/Password' + error);
+      });
 
-    //alert('ERORR2');
     }
-  
- })
-
-  
-  .then((res) => {
-
-
-
-
-  alert('You have successfully logged in :)')
- 
-  const d1 = JSON.stringify(res);
-
-   const data  = JSON.parse(res);
-   AsyncStorage.setItem('token',res);
-   
-
-   
-
-    
-
-
-
-   
-  })
-.catch((error) => {
-alert('Invalid email/Password');
-});
-
-}
 
   render(){
     return(
 
       <View style = {styles.container}>
         <Text style = {styles.text}>Login</Text>
-
-        
-
         <TextInput
-
         placeholder="Email"
-
         onChangeText = {(val) => this.setState({email:val})}
-
         style={styles.input}/>
 
         
@@ -146,7 +119,7 @@ alert('Invalid email/Password');
 
         <TouchableOpacity
           style={styles.customBtnBG}
-          onPress = {this.handlepress.bind(this)}  >
+          onPress = {this.handlePressLogin.bind(this)}  >
           <Text style={styles.customBtnText}>Login</Text>
         </TouchableOpacity> 
 
